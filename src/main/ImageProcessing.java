@@ -185,17 +185,18 @@ public final class ImageProcessing {
      */
     public static int[][] matrixToRGBImage(double[][] matrix, double min, double max) {
     	
-    	// TODO Started
+    	// TODO TOUT FAUT
     	// verify assertion
+    	// la méthode show n'est pas a 'portée'...
     	
-    	assert matrix.isEmpty() = 0 && min >= 0 && max >= 0;
-    	int differenceImage[][] = new double[768-patternLength][1024-patternWidth];
-    	for (int iligne = 0; iligne< 768-patternLength; ++iligne) {
-    			for (int icolonne = 0; icolonne < 1024-patternWidth; ++icolonne) {
-    				differenceImage[iligne][icolonne] = ((matrix[iligne][icolonne] - min)/(max-min))*255
+    	// assert (matrix.length > 0) && (matrix[0].length > 0) && (min >= 0 ) && (max >= 0) ;
+    	int differenceImage[][] = new int[matrix.length][matrix[0].length];
+    	for (int iligne = 0; iligne < matrix.length; ++iligne) {
+    			for (int icolonne = 0; icolonne < matrix[0].length; ++icolonne) {
+    				differenceImage[iligne][icolonne] = (int) ((matrix[iligne][icolonne] - min)/(max-min))*255 ;
     			}
     	}
     	show(differenceImage, "mapping de la différence en gray-scale");
-    	return differenceImage[][];
+    	return differenceImage;
     }
 }
