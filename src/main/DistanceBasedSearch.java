@@ -41,16 +41,16 @@ public class DistanceBasedSearch {
 	public static double meanAbsoluteError(int row, int col, int[][] pattern, int[][] image) {
 
     	// TODO almost done
-		//remplir patternWidth , patternLength, patternSize: REMPLIR 
+		// 
 		// assertion tailles pattern & image
-		assert row >= 0 && col >= 0 && pattern != 0 && image.
+		assert row >= 0 && col >= 0 && pattern.length != 0 && image.length !=0 ;
 		double EAM = 0;
-		for (int iligne = row ; iligne < row + patternLength ; ++iligne ) { 
-			for (int icolonne = col ; icolonne < col + patternWidth ; ++icolonne ) {
-				EAM += pixelAbsoluteError(pattern[iligne][icolone], image[iligne][icolone]);
+		for (int iligne = row ; iligne < row + pattern.length ; ++iligne ) { 
+			for (int icolonne = col ; icolonne < col + pattern[0].length ; ++icolonne ) {
+				EAM += pixelAbsoluteError(pattern[iligne][icolonne], image[iligne][icolonne]);
 			}
 		}
-		EAM /= patternSize;
+		EAM /= pattern.length * pattern[0].length;
 		return EAM; 
 	}
 
@@ -72,15 +72,13 @@ public class DistanceBasedSearch {
 		
 		// voir le pour aller plus loin pour cette methode!!
 		
-		double tableDistance[][] = new double[768-patternLength][1024-patternWidth] ; 
+		double tableDistance[][] = new double[image.length-pattern.length][image[0].length-pattern[0].length] ; 
 		
-		for (int iligne = 0; iligne < 768 - patternLength; ++iligne ) {
-			for (int icolonne = 0 ; icolonne < 1024 - patternWidth; ++icolonne ) {
+		for (int iligne = 0; iligne < image.length - pattern.length; ++iligne ) {
+			for (int icolonne = 0 ; icolonne < image[0].length - pattern[0].length; ++icolonne ) {
 				tableDistance[iligne][icolonne] = meanAbsoluteError(iligne, icolonne, pattern, image);
 			}
 		}
-		
-		
 		
 		return tableDistance;
 		// is this needed??
