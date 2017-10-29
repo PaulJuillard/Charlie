@@ -75,12 +75,10 @@ public class DistanceBasedSearch {
 		double tableDistance[][] = new double[image.length-pattern.length][image[0].length-pattern[0].length] ; 
 		
 		for (int iligne = 0; iligne < image.length - pattern.length; ++iligne ) {
-			for (int icolonne = 0 ; icolonne < image[0].length - pattern[0].legnth; ++icolonne ) {
+			for (int icolonne = 0 ; icolonne < image[0].length - pattern[0].length; ++icolonne ) {
 				tableDistance[iligne][icolonne] = meanAbsoluteError(iligne, icolonne, pattern, image);
 			}
 		}
-		
-		
 		
 		return tableDistance;
 		// is this needed??

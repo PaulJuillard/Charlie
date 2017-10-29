@@ -37,12 +37,12 @@ public class SimilarityBasedSearch {
 		
 		// TODO almost done
 		// assertions!
-		double NCC = new double; //Normalized Cross Correlation
-		double imageVariance = new double;
+		double NCC = 0; //Normalized Cross Correlation
+		double imageVariance = 0;
 		double imageMean = windowMean(image);
-		double patternVariance = new double;
+		double patternVariance = 0;
 		double patternMean = windowMean(pattern);
-		double covarianceSum = new double;
+		double covarianceSum = 0;
 		
 		for (int iligne = 0; iligne < pattern.length ; ++iligne) {
 			for (int icolonne = 0 ; icolonne < pattern[0].length ; ++ icolonne) {
@@ -51,9 +51,10 @@ public class SimilarityBasedSearch {
 				covarianceSum += (image[iligne + row][icolonne + col] - imageMean) * (pattern[iligne][icolonne] - patternMean);
 				}
 		}
-		double ecartType = (Math.sqrt((imageVariance*imageVariance)*(patternVariance * patternVariance));
+		
+		double ecartType = (Math.sqrt((imageVariance*imageVariance)*(patternVariance * patternVariance)));
 		if(ecartType == 0) { return -1;}
-		else { NCC = covarianceSum / (Math.sqrt((imageVariance*imageVariance)*(patternVariance * patternVariance)); 
+		else { NCC = covarianceSum / (Math.sqrt((imageVariance*imageVariance)*(patternVariance * patternVariance))); 
 		return NCC; }
 	}
 
@@ -68,10 +69,16 @@ public class SimilarityBasedSearch {
 	 */
 	public static double[][] similarityMatrix(double[][] pattern, double[][] image) {
 		
-		// TODO started
-		double[][] similarityMatrix = new double[pattern.length][pattern[0].length];
-		for (int iligne)
-		return new double[][]{}; 
+		// TODO almost done
+		// assertions
+		double[][] similarityMatrix = new double[image.length - pattern.length][image[0].length - pattern[0].length];
+		
+		for (int iligne = 0; iligne < similarityMatrix.length ; ++iligne) {
+			for (int icolonne = 0; icolonne < similarityMatrix[0].length ; ++icolonne) {
+				similarityMatrix[iligne][icolonne] = normalizedCrossCorrelation(iligne, icolonne, pattern, image);
+			}
+		}
+		return similarityMatrix;
 	}
 
 }
