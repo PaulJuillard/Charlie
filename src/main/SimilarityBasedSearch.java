@@ -7,10 +7,18 @@ public class SimilarityBasedSearch {
 	 * @param image : a 2D double array, the gray-scale Image
 	 * @return a double value between 0 and 255 which is the mean value
 	 */
-	public static double mean(double[][] image) {
+	public static double windowMean(double[][] image) {
+		//TODO almost done
+		//assertions
 		
-		// TODO implement me !
-		return -2; 
+		double graySum = 0;
+		for (int iligne = 0; iligne < image.length; ++iligne) {
+			for (int icolonne = 0; icolonne < image[0].length; ++icolonne) {
+				graySum += image[iligne][icolonne];
+			}
+		}
+		double meanGray = graySum / (image.length * image[0].length);
+		return meanGray; 
 	}
 
 	
@@ -27,8 +35,27 @@ public class SimilarityBasedSearch {
 	 */
 	public static double normalizedCrossCorrelation(int row, int col, double[][] pattern, double[][] image) {
 		
-		// TODO implement me !
-		return -2; 
+		// TODO almost done
+		// assertions!
+		double NCC = 0; //Normalized Cross Correlation
+		double imageVariance = 0;
+		double imageMean = windowMean(image);
+		double patternVariance = 0;
+		double patternMean = windowMean(pattern);
+		double covarianceSum = 0;
+		
+		for (int iligne = 0; iligne < pattern.length ; ++iligne) {
+			for (int icolonne = 0 ; icolonne < pattern[0].length ; ++ icolonne) {
+				imageVariance += image[iligne + row][icolonne + col] - imageMean;
+				patternVariance += pattern[iligne][icolonne] - patternMean;	
+				covarianceSum += (image[iligne + row][icolonne + col] - imageMean) * (pattern[iligne][icolonne] - patternMean);
+				}
+		}
+		
+		double ecartType = (Math.sqrt((imageVariance*imageVariance)*(patternVariance * patternVariance)));
+		if(ecartType == 0) { return -1;}
+		else { NCC = covarianceSum / (Math.sqrt((imageVariance*imageVariance)*(patternVariance * patternVariance))); 
+		return NCC; }
 	}
 
 	
@@ -42,8 +69,16 @@ public class SimilarityBasedSearch {
 	 */
 	public static double[][] similarityMatrix(double[][] pattern, double[][] image) {
 		
-		// TODO implement me !
-		return new double[][]{}; 
+		// TODO almost done
+		// assertions
+		double[][] similarityMatrix = new double[image.length - pattern.length][image[0].length - pattern[0].length];
+		
+		for (int iligne = 0; iligne < similarityMatrix.length ; ++iligne) {
+			for (int icolonne = 0; icolonne < similarityMatrix[0].length ; ++icolonne) {
+				similarityMatrix[iligne][icolonne] = normalizedCrossCorrelation(iligne, icolonne, pattern, image);
+			}
+		}
+		return similarityMatrix;
 	}
 
 }
