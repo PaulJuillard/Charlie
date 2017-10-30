@@ -1,3 +1,5 @@
+
+
 package main;
 public final class ImageProcessing {
 	
@@ -11,9 +13,15 @@ public final class ImageProcessing {
      */
     public static int getRed(int rgb) {
 
-    	// TODO implement me !
-    	return -2; 
+    	// to be controled, red version of the given pixel//
+    	 assert ((rgb < 256) || (rgb >= 0)); // Is that usefull??????//
+    	int red = rgb >> 16;
+        
+    	return red; 
+     
+    	// end //
     }
+    
 
     /**
      * Returns green component from given packed color.
@@ -24,8 +32,14 @@ public final class ImageProcessing {
      * @see #getRGB(int, int, int)
      */
     public static int getGreen(int rgb) {
-    	// TODO implement me !
-    	return -2; 
+    	
+    	// to be controled, green value of the given pixel//
+    	
+    	int greenw = rgb >> 8;
+    	int green = greenw << 17;
+    	return green; 
+      
+    	// end //
     }
 
     /**
@@ -37,8 +51,14 @@ public final class ImageProcessing {
      * @see #getRGB(int, int, int)
      */
     public static int getBlue(int rgb) {
-    	// TODO implement me !
-        return -2;
+    
+    	// to be controled, blue value of the given pixel//
+    
+    	int blue = rgb << 9;
+        return blue;
+        
+        // end//
+    	
     }
 
    
@@ -52,8 +72,18 @@ public final class ImageProcessing {
      * @see #getRGB(int)
      */
     public static double getGray(int rgb) {
-    	// TODO implement me !
-        return -2;
+    	
+    	// to be controled, Give the gray value of a given pixel//
+    	
+    	int blue = getBlue(rgb);
+    	int red = getRed(rgb);
+    	int green = getGreen(rgb);
+    	
+    	int gray = ((blue+red+green)/3);
+    	
+        return gray;
+    
+        // end //
     }
 
     /**
@@ -67,8 +97,16 @@ public final class ImageProcessing {
      * @see #getBlue
      */
     public static int getRGB(int red, int green, int blue) {
-    	// TODO implement me !
-    	return -2; 
+    	
+    	// to be controled, give the rgb value of a pixel for his red green and blue value//
+    	assert ( ((red>=0)||(red<256)) || ((green>=0)||(green<256)) || ((blue>=0)||(blue<256)) );
+    	int rgb = red <<8;
+    	rgb = red + green;
+    	rgb = rgb <<8;
+    	rgb = rgb + blue;
+    	return rgb; 
+
+    	// end //
     }
 
     /**
@@ -78,8 +116,17 @@ public final class ImageProcessing {
      * @see #getGray
      */
     public static int getRGB(double gray) {
-    	// TODO implement me !
-    	return -2; 
+    	
+    	// to be controled, get the rgb value of a given pixel from the gray value of that one//
+    	int rgb;
+    	for (int i=0; i<3; ++i) {
+    	rgb = (int)gray;
+    	rgb = rgb << 8;
+    	}
+    	
+    	return rgb;
+    	
+    	// end
     }
 
     /**
@@ -91,8 +138,19 @@ public final class ImageProcessing {
      */
     public static double[][] toGray(int[][] image) {
 
-    	// TODO implement me !
-    	return new double[][]{};
+    	// to be controled, we want to get the the gray value of each pixel of the image //
+    
+    	double grayImage [][] = new double [728][1024];
+    	for (int iligne =0; iligne<image.length ; ++iligne) {
+    		for (int jcolonne =0; jcolonne <image.length ; ++jcolonne) {
+    			grayImage[iligne][jcolonne] = getGray(image [iligne][jcolonne]);
+    			image[iligne][jcolonne] = (int)grayImage[iligne][jcolonne];
+    		}
+    		}
+    	
+
+    	return grayImage [][] ;
+    	// besoins de "{}"????//
     }
 
     /**
@@ -102,11 +160,21 @@ public final class ImageProcessing {
      * @see #decode
      * @see #getRGB(double)
      */
-    public static int[][] toRGB(double[][] gray) {
+    public static int[][] toRGB(int gray[][]) {  //gray int ou double????????????????????????????
+        
+    	// to be controled  //
+    	
+    	int [][] imageRGB = new int [748][1024]; 
+    	for (int iligne = 0; iligne < gray.length; ++iligne) {
+    		for (int jcolonne =0; jcolonne < gray.length; ++jcolonne) {
+    			for (int k=0; k<3; ++k) {
+    			imageRGB [iligne][jcolonne] = gray[iligne][jcolonne];
+    			imageRGB[iligne][jcolonne] = imageRGB[iligne][jcolonne] << 8;
+    		}
+    		}}
+    	}
+    	return imageRGB [][];
 
-    	// TODO implement me !
-    	return new int[][]{};
-    }
 
     
     /**
@@ -118,19 +186,8 @@ public final class ImageProcessing {
      * @return an 2D integer array, containing a RGB mapping of the matrix 
      */
     public static int[][] matrixToRGBImage(double[][] matrix, double min, double max) {
-    	
-    	// TODO TOUT FAUT
-    	// verify assertion
-    	// la méthode show n'est pas a 'portée'...
-    	
-    	// assert (matrix.length > 0) && (matrix[0].length > 0) && (min >= 0 ) && (max >= 0) ;
-    	int differenceImage[][] = new int[matrix.length][matrix[0].length];
-    	for (int iligne = 0; iligne < matrix.length; ++iligne) {
-    			for (int icolonne = 0; icolonne < matrix[0].length; ++icolonne) {
-    				differenceImage[iligne][icolonne] = (int) ((matrix[iligne][icolonne] - min)/(max-min))*255 ;
-    			}
-    	}
-    	show(differenceImage, "mapping de la différence en gray-scale");
-    	return differenceImage;
+    	// to be done
+    	return new int[][]{};
     }
 }
+
