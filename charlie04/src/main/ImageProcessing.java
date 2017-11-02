@@ -1,5 +1,5 @@
 
-package main;
+
 
 public final class ImageProcessing {
 	
@@ -40,8 +40,10 @@ public final class ImageProcessing {
     	
     	//TODO review
     	
-    	int greenw = rgb >> 8;
-    	int green = greenw << 17;
+    	int greenw = rgb >> 8;  
+    	int greenww = greenw >>8;
+    	greenww=greenww<<8;
+    	int green = greenw-greenww;
     	return green; 
       
     	// end
@@ -59,9 +61,9 @@ public final class ImageProcessing {
     
     	// TODO review
     
-    	int blue = rgb << 9;
-        return blue;
-        
+    	int blue = rgb/256;
+    	blue=rgb -(blue*256);
+    	return blue;
         // end//
     	
     }
@@ -104,13 +106,10 @@ public final class ImageProcessing {
     public static int getRGB(int red, int green, int blue) {
     	
     	//TODO review
-    	//give the rgb value of a pixel for his red green and blue value
+    	//give the rgb value of a pixel for his red green and blue value//
     	assert ( ((red>=0)||(red<256)) || ((green>=0)||(green<256)) || ((blue>=0)||(blue<256)) );
-    	int rgb = red <<8;
-    	rgb = red + green;
-    	rgb = rgb <<8;
-    	rgb = rgb + blue;
-    	return rgb; 
+    	int rgb= ( blue * 256 *256 )+(green *256)+(red);
+    	return rgb;
 
     	// end
     }
@@ -123,14 +122,12 @@ public final class ImageProcessing {
      */
     public static int getRGB(double gray) {
     	
-    	// to be controled, get the rgb value of a given pixel from the gray value of that one//
-    	int rgb = 0;
-    	for (int i=0; i<3; ++i) {
-    	rgb = (int) gray; // check transition between double and int
-    	rgb = rgb << 8;
-    	}
+    	int grayy=(int)gray;
+    	int rgb= (grayy*256*256)+(grayy*256)+(grayy);
     	
-    	return rgb;
+    	
+    	 
+    	 return rgb;
     	
     	// end
     }
@@ -191,18 +188,18 @@ public final class ImageProcessing {
      */
     public static int[][] matrixToRGBImage(double[][] matrix, double min, double max) {
     	
-    	// TODO fixed
+    	// TODO TOUT FAUT
     	// verify assertion
+    	// la méthode show n'est pas a 'portée'...
     	
     	// assert (matrix.length > 0) && (matrix[0].length > 0) && (min >= 0 ) && (max >= 0) ;
-    	int matrixRGB[][] = new int[matrix.length][matrix[0].length];
+    	int differenceImage[][] = new int[matrix.length][matrix[0].length];
     	for (int irow = 0; irow < matrix.length; ++irow) {
     			for (int icolumn = 0; icolumn < matrix[0].length; ++icolumn) {
-    				matrixRGB[irow][icolumn] = (int) ((matrix[irow][icolumn] - min)/(max-min))*255 ;
+    				differenceImage[irow][icolumn] = (int) ((matrix[irow][icolumn] - min)/(max-min))*255 ;
     			}
     	}
-    	// a matrix of integer ranging from 0 to 255: 
-    	// can be used as RGB to create a gray-scale image
-    	return matrixRGB;
+    	// show(differenceImage, "mapping de la différence en gray-scale");
+    	return differenceImage;
     }
 }
