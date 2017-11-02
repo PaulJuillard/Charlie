@@ -18,7 +18,7 @@ public class Collector {
 		double max = -1000; // remplacer par la commande pour + l'infini
 		int[] bestCoordinates = new int[2];
 		
-		// choisir si mettre 2 if et 4 for (plus optimisée moins lisible)
+		// choisir+justifier en commentaires si mettre 2 if et 4 for (plus optimisée moins lisible)
 			
 			for (int irow = 0; irow < matrix.length ; ++irow ) {
 				for(int icolumn = 0; icolumn < matrix[0].length; ++icolumn) {

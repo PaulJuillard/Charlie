@@ -104,7 +104,7 @@ public final class ImageProcessing {
     public static int getRGB(int red, int green, int blue) {
     	
     	//TODO review
-    	//give the rgb value of a pixel for his red green and blue value//
+    	//give the rgb value of a pixel for his red green and blue value
     	assert ( ((red>=0)||(red<256)) || ((green>=0)||(green<256)) || ((blue>=0)||(blue<256)) );
     	int rgb = red <<8;
     	rgb = red + green;
@@ -191,18 +191,18 @@ public final class ImageProcessing {
      */
     public static int[][] matrixToRGBImage(double[][] matrix, double min, double max) {
     	
-    	// TODO TOUT FAUT
+    	// TODO fixed
     	// verify assertion
-    	// la méthode show n'est pas a 'portée'...
     	
     	// assert (matrix.length > 0) && (matrix[0].length > 0) && (min >= 0 ) && (max >= 0) ;
-    	int differenceImage[][] = new int[matrix.length][matrix[0].length];
+    	int matrixRGB[][] = new int[matrix.length][matrix[0].length];
     	for (int irow = 0; irow < matrix.length; ++irow) {
     			for (int icolumn = 0; icolumn < matrix[0].length; ++icolumn) {
-    				differenceImage[irow][icolumn] = (int) ((matrix[irow][icolumn] - min)/(max-min))*255 ;
+    				matrixRGB[irow][icolumn] = (int) ((matrix[irow][icolumn] - min)/(max-min))*255 ;
     			}
     	}
-    	// show(differenceImage, "mapping de la différence en gray-scale");
-    	return differenceImage;
+    	// a matrix of integer ranging from 0 to 255: 
+    	// can be used as RGB to create a gray-scale image
+    	return matrixRGB;
     }
 }
