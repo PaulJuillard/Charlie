@@ -14,34 +14,37 @@ public class Collector {
 
     	// TODO review
 		
-		double min = 1000;  // remplacer par la commande pour - l'infini
-		double max = -1000; // remplacer par la commande pour + l'infini
+		double min = Double.POSITIVE_INFINITY;  
+		double max = Double.NEGATIVE_INFINITY; 
 		int[] bestCoordinates = new int[2];
 		
 		// choisir si mettre 2 if et 4 for (plus optimisée moins lisible)
-			
+			if (!smallestFirst) {
 			for (int irow = 0; irow < matrix.length ; ++irow ) {
 				for(int icolumn = 0; icolumn < matrix[0].length; ++icolumn) {
 					
 					// for Distance Based Search
-					if (smallestFirst && (matrix[irow][icolumn] < min) ) {
+					if (matrix[irow][icolumn] >max)  {
+						
+						max = matrix[irow][icolumn];
+						bestCoordinates[0] = irow;
+						bestCoordinates[1] = icolumn;
+					}}
+			}}
+			else {
+				for (int irow = 0; irow < matrix.length ; ++irow ) {
+					for(int icolumn = 0; icolumn < matrix[0].length; ++icolumn) {
+						
+					// for Similarity Based Search
+					if(matrix[irow][icolumn] <min) { 
 						
 						min = matrix[irow][icolumn];
 						bestCoordinates[0] = irow;
 						bestCoordinates[1] = icolumn;
 						
 						}
-					
-					// for Similarity Based Search
-					else if( !smallestFirst && matrix[irow][icolumn] > max) { 
-						
-						max = matrix[irow][icolumn];
-						bestCoordinates[0] = irow;
-						bestCoordinates[1] = icolumn;
-						
-						}
 				}
-			}
+			}}
 		
 		return bestCoordinates;
 	}
@@ -58,21 +61,31 @@ public class Collector {
 
     	// TODO review
 		
-		int[][] NbestCoordinates = new int[2][n];
+			
+		
+		int[][] NbestCoordinates = new int[n][2];
 		for (int i = 0 ; i < n ; ++i) {
 			
 			// the coordinates of the i-th best element of the matrix are stored in i-th row of returned matrix.
 			NbestCoordinates[i] = findBest(matrix, smallestFirst);
 			
 			// i-th max term from the matrix is taken to a neutral value to be disregarded for next 'i's.
-			// a la place du 2 c'est in i
 			
-			matrix[ NbestCoordinates[i][0] ][ NbestCoordinates[0][i] ] = 0; //trouver une valeure neutre non nulle
+			if (!smallestFirst) {
+			matrix[ NbestCoordinates[i][0] ][ NbestCoordinates[i][1] ] = Double.POSITIVE_INFINITY ; //trouver une valeure neutre non nulle
+			}
+			else {
+				matrix[ NbestCoordinates[i][0] ][ NbestCoordinates[i][1] ] = Double.NEGATIVE_INFINITY ; //trouver une valeure neutre non nulle	
+			}
+			//trouver une valeure neutre non nulle
+				
+		
 		}
 		
+		
 		return NbestCoordinates;
-	}
 	
+		}
 	
 
 	/**

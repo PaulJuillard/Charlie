@@ -10,7 +10,7 @@ public class DistanceBasedSearch {
 	public static double pixelAbsoluteError(int patternPixel, int imagePixel) {
 
     	// TODO review
-		assert patternPixel>=0 && imagePixel>=0;
+		//assert patternPixel>=0 && imagePixel>=0;
 		
 		// Errors (= difference between pattern's & image's pixel) for each rgb value of given pixel
 		int AbsoluteError_red = ImageProcessing.getRed(patternPixel) - ImageProcessing.getRed(imagePixel);
@@ -45,8 +45,8 @@ public class DistanceBasedSearch {
 		double MAE = 0; //Absolute Mean Error
 		
 		// adds the absolute errors of the overlayed pattern-image pixels
-		for (int irow = row ; irow < row + pattern.length ; ++irow ) { 
-			for (int icolumn = col ; icolumn < col + pattern[0].length ; ++icolumn ) {
+		for (int irow = row ; irow <  pattern.length - row; ++irow ) { 
+			for (int icolumn = col ; icolumn <  pattern[0].length-col ; ++icolumn ) {
 				MAE += pixelAbsoluteError(pattern[irow][icolumn], image[irow][icolumn]);
 			}
 		}

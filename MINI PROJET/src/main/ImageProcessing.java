@@ -39,10 +39,13 @@ public final class ImageProcessing {
     	
     	//TODO review
     	
-    	int greenw = rgb >> 8;  
-    	int greenww = greenw >>8;
-    	greenww=greenww<<8;
-    	int green = greenw-greenww;
+    	int green = rgb >> 8;  
+    green = green & 0b11111111;
+    
+    	
+    	
+    	    	
+    	
     	return green; 
       
     	// end
@@ -60,8 +63,8 @@ public final class ImageProcessing {
     
     	// TODO review
     
-    	int blue = rgb/256;
-    	blue=rgb -(blue*256);
+    	
+    	int blue= rgb & 0b11111111 ;
     	return blue;
         // end//
     	
@@ -81,13 +84,13 @@ public final class ImageProcessing {
     	
     	//TODO review
     	
-    	int blue = getBlue(rgb);
-    	int red = getRed(rgb);
-    	int green = getGreen(rgb);
+    	int blue = getBlue(rgb)&0xff;
+    	int red = getRed(rgb)&0xff;
+    	int green = getGreen(rgb)&0xff;
     	
-    	double gray = ((blue+red+green)/3);
+    	return ((int)Math.round(((red+green+blue)/3)&0xff)) ;
+    
     	
-        return gray;
     
         // end
     }
@@ -107,7 +110,7 @@ public final class ImageProcessing {
     	//TODO review
     	//give the rgb value of a pixel for his red green and blue value//
     	assert ( ((red>=0)||(red<256)) || ((green>=0)||(green<256)) || ((blue>=0)||(blue<256)) );
-    	int rgb= ( blue * 256 *256 )+(green *256)+(red);
+    	int rgb= ( red * 256 *256 )+(green *256)+(blue);
     	return rgb;
 
     	// end
@@ -121,7 +124,7 @@ public final class ImageProcessing {
      */
     public static int getRGB(double gray) {
     	
-    	int grayy=(int)gray;
+    	int grayy=(int) Math.round(gray);
     	int rgb= (grayy*256*256)+(grayy*256)+(grayy);
     	
     	
@@ -144,9 +147,10 @@ public final class ImageProcessing {
     
     	double grayImage [][] = new double [image.length][image[0].length];
     	for (int irow =0; irow <image.length ; ++irow) {
-    		for (int icolumn =0; icolumn <image.length ; ++icolumn) {
-    			grayImage[irow][icolumn] = getGray(image [irow][icolumn]);
-    			image[irow][icolumn] = (int) grayImage[irow][icolumn]; // check conversion from double to int
+    		for (int icolumn =0; icolumn <image[0].length ; ++icolumn) {
+    			//grayImage[irow][icolumn] = getGray(image [irow][icolumn]);
+    			grayImage[irow][icolumn] = getGray(image[irow][icolumn]); // check conversion from double to int
+    		    
     		}
     		}
     	
@@ -167,11 +171,11 @@ public final class ImageProcessing {
     	
     	int [][] imageRGB = new int [gray.length][gray[0].length]; 
     	for (int irow = 0; irow < gray.length; ++irow) {
-    		for (int icolumn =0; icolumn < gray.length; ++icolumn) {
-    			for (int k=0; k<3; ++k) {
-    			imageRGB [irow][icolumn] = (int) gray[0][0];  // revoir ICI
-    			imageRGB[irow][icolumn] = imageRGB[irow][icolumn] << 8;
-    		}
+    		for (int icolumn =0; icolumn < gray[0].length; ++icolumn) {
+    		
+    			imageRGB [irow][icolumn] =  getRGB(gray[irow][icolumn]); // revoir ICI
+    			//imageRGB[irow][icolumn] = imageRGB[irow][icolumn] *256;
+    		
     		}
     	}
     	return imageRGB;
