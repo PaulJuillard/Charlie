@@ -10,11 +10,38 @@ public class Collector {
 	 * @param smallestFirst : a boolean, indicates if the smallest element is the best or not (biggest is then the best)
 	 * @return an array of two integer coordinates, row first and then column
 	 */
+	
 	public static int[] findBest(double[][] matrix, boolean smallestFirst) {
-
-    	// TODO implement me !
-		return new int[]{};
-	}
+		
+		double min= Double.POSITIVE_INFINITY;
+		double max= Double.NEGATIVE_INFINITY;
+		int [] bestCoordinates = new int [2];
+		
+		for (int irow= 0; irow < matrix.length; ++irow ) {
+		for (int icolumn=0; icolumn < matrix[0].length; ++icolumn) {
+			
+			//minimum	
+			if (smallestFirst) {
+					if (matrix[irow][icolumn]< min) {
+						min = matrix[irow][icolumn];
+						bestCoordinates [0]= irow;
+						bestCoordinates[1]=icolumn;
+						//System.out.print("-");
+					}
+				}
+			
+			//maximum
+			else {
+					if (matrix[irow][icolumn]>max) {
+						max=matrix[irow][icolumn];
+						bestCoordinates[0]=irow;
+						bestCoordinates[1]=icolumn;
+						//System.out.print("|");
+					}
+				}
+		}}
+		return bestCoordinates;
+		}
 
 	
 	/**
@@ -26,8 +53,28 @@ public class Collector {
 	 */
 	public static int[][] findNBest(int n, double[][] matrix, boolean smallestFirst) {
 
-    	// TODO implement me !
-		return new int[][]{};
+    	// TODO review
+		
+		int[][] NbestCoordinates = new int[n][2];
+		for (int i = 0 ; i < n ; ++i) {
+			
+			// the coordinates of the i-th best element of the matrix are stored in i-th row of returned matrix.
+			NbestCoordinates[i] = findBest(matrix, smallestFirst);
+			
+			if (smallestFirst) {
+				// i-th min term from the matrix is taken to a big value to be disregarded for next 'i's.
+				matrix[ NbestCoordinates[i][0] ][ NbestCoordinates[i][1] ] = Double.POSITIVE_INFINITY;
+				System.out.print("x");
+			} 
+			
+			else {
+				// i-th max term from the matrix is taken to a small value to be disregarded for next 'i's.
+				matrix[ NbestCoordinates[i][0] ][ NbestCoordinates[i][1] ] = Double.NEGATIVE_INFINITY;
+				System.out.print("o");
+			}
+		}
+		
+		return NbestCoordinates;
 	}
 	
 	

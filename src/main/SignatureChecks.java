@@ -51,7 +51,7 @@ public class SignatureChecks {
         
         
         //CrossCorrelation
-        double m = SimilarityBasedSearch.mean(res);
+        double m = SimilarityBasedSearch.windowMean(res);
         SimilarityBasedSearch.normalizedCrossCorrelation(0, 0, grayImage, grayImage);
         SimilarityBasedSearch.similarityMatrix(grayImage, grayImage);
     }

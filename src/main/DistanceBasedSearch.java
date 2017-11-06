@@ -10,17 +10,16 @@ public class DistanceBasedSearch {
 	 */
 	public static double pixelAbsoluteError(int patternPixel, int imagePixel) {
 
-    	// TODO finished
+    	// TODO review
 		assert patternPixel>=0 && imagePixel>=0;
 		
-		int AbsoluteError_red = getRed(patternPixel) - getRed(imagePixel);
-		int AbsoluteError_green = getGreen(patternPixel) - getGreen(imagePixel);
-		int AbsoluteError_blue = getBlue(patternPixel) - getBlue(imagePixel);
+		// Errors (= difference between pattern's & image's pixel) for each rgb value of given pixel
+		int AbsoluteError_red = Math.abs(ImageProcessing.getRed(patternPixel) - ImageProcessing.getRed(imagePixel));
+		int AbsoluteError_green = Math.abs(ImageProcessing.getGreen(patternPixel) - ImageProcessing.getGreen(imagePixel));
+		int AbsoluteError_blue = Math.abs(ImageProcessing.getBlue(patternPixel) - ImageProcessing.getBlue(imagePixel));
 		
-		double AbsoluteError = (AbsoluteError_red + AbsoluteError_green + AbsoluteError_blue) / 3;
-		
-		
-		
+		// sum of the Absolute Errors of the rgb values
+		double AbsoluteError = (AbsoluteError_red + AbsoluteError_green + AbsoluteError_blue) / 3.0;
 		
 		return AbsoluteError;
 	}
@@ -32,7 +31,6 @@ public class DistanceBasedSearch {
 	 * @param column : a integer, the column-coordinate of the upper left corner of the pattern in the image.
 	 * @param pattern : an 2D array of integers, the RGB pattern to find
 	 * @param image : an 2D array of integers, the RGB image where to look for the pattern
-	 * @variable EAM: Erreur Absolue Moyenne
 	 * @return a double, the mean absolute error
 	 * @return a double, mean absolute error value at position (row, col) between the pattern and the part of
 	 * the base image that is covered by the pattern, if the pattern is shifted by x and y.
@@ -42,23 +40,31 @@ public class DistanceBasedSearch {
 
     	// TODO almost done
 		// 
-		// assertion tailles pattern & image
-		assert row >= 0 && col >= 0 && pattern.length != 0 && image.length !=0 ;
-		double EAM = 0;
-		for (int iligne = row ; iligne < row + pattern.length ; ++iligne ) { 
-			for (int icolonne = col ; icolonne < col + pattern[0].length ; ++icolonne ) {
-				EAM += pixelAbsoluteError(pattern[iligne][icolonne], image[iligne][icolonne]);
+		// assertion pattern & image . length
+		//assert row >= 0 && col >= 0 && pattern.length != 0 && image.length !=0 ; 	
+		
+		double MAE = 0; //Absolute Mean Error
+		
+		// adds the absolute errors of the overlayed pattern-image pixels
+		for (int irow = 0 ; irow < pattern.length; ++irow ) { 
+			for (int icolumn = 0 ; icolumn < pattern[0].length ; ++icolumn ) {
+				//System.out.println("absolute error of given pixel: " +
+						//pixelAbsoluteError(pattern[irow][icolumn], image[irow][icolumn]));
+				MAE = MAE+ pixelAbsoluteError(pattern[irow][icolumn], image[irow+row][icolumn+col]);
 			}
 		}
-		EAM /= pattern.length * pattern[0].length;
-		return EAM; 
+		// at this point MAE is the total absolute error, dividing by the number of pixels it becomes mean absolute error
+		//System.out.println("absolute error of pattern/image : " + MAE);
+		MAE = MAE / ( pattern.length * pattern[0].length);
+		//System.out.println("mean absolute error: " + MAE);
+		return MAE; 
 	}
 
 	/**
 	 * Compute the distanceMatrix between a RGB image and a RGB pattern
 	 * @param pattern : an 2D array of integers, the RGB pattern to find
 	 * @param image : an 2D array of integers, the RGB image where to look for the pattern
-	 * @param tableDistance : the matrix of the mean absolute error between the pattern and the image.
+	 * @param distanceTable : the matrix of the mean absolute error between the pattern and the image.
 	 * @return a 2D array of doubles, containing for each pixel of a original RGB image, 
 	 * the distance (meanAbsoluteError) between the image's window and the pattern
 	 * placed over this pixel (upper-left corner) 
@@ -72,16 +78,15 @@ public class DistanceBasedSearch {
 		
 		// voir le pour aller plus loin pour cette methode!!
 		
-		double tableDistance[][] = new double[image.length-pattern.length][image[0].length-pattern[0].length] ; 
+		double distanceTable[][] = new double[image.length-pattern.length][image[0].length-pattern[0].length] ; 
 		
-		for (int iligne = 0; iligne < image.length - pattern.length; ++iligne ) {
-			for (int icolonne = 0 ; icolonne < image[0].length - pattern[0].length; ++icolonne ) {
-				tableDistance[iligne][icolonne] = meanAbsoluteError(iligne, icolonne, pattern, image);
+		// Distance (=MAE) between pattern and image at coordinates (i,j) is set in distanceTable[i][j];
+		for (int irow = 0; irow < image.length - pattern.length; ++irow ) {
+			for (int icolumn = 0 ; icolumn < image[0].length - pattern[0].length; ++icolumn ) {
+				distanceTable[irow][icolumn] = meanAbsoluteError(irow, icolumn, pattern, image);
 			}
 		}
 		
-		return tableDistance;
-		// is this needed??
-		// return new double[][]{}; 
+		return distanceTable;
 	}
 }

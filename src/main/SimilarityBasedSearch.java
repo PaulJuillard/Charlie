@@ -12,11 +12,14 @@ public class SimilarityBasedSearch {
 		//assertions
 		
 		double graySum = 0;
-		for (int iligne = 0; iligne < image.length; ++iligne) {
-			for (int icolonne = 0; icolonne < image[0].length; ++icolonne) {
-				graySum += image[iligne][icolonne];
+		
+		//sums the gray values of the pixels of the image
+		for (int irow = 0; irow < image.length; ++irow) {
+			for (int icolumn = 0; icolumn < image[0].length; ++icolumn) {
+				graySum += image[irow][icolumn];
 			}
 		}
+		//converts sum to average
 		double meanGray = graySum / (image.length * image[0].length);
 		return meanGray; 
 	}
@@ -37,22 +40,52 @@ public class SimilarityBasedSearch {
 		
 		// TODO almost done
 		// assertions!
-		double NCC = 0; //Normalized Cross Correlation
-		double imageVariance = 0;
-		double imageMean = windowMean(image);
-		double patternVariance = 0;
-		double patternMean = windowMean(pattern);
-		double covarianceSum = 0;
 		
-		for (int iligne = 0; iligne < pattern.length ; ++iligne) {
-			for (int icolonne = 0 ; icolonne < pattern[0].length ; ++ icolonne) {
-				imageVariance += image[iligne + row][icolonne + col] - imageMean;
-				patternVariance += pattern[iligne][icolonne] - patternMean;	
-				covarianceSum += (image[iligne + row][icolonne + col] - imageMean) * (pattern[iligne][icolonne] - patternMean);
-				}
+		double NCC = 0; //Normalized Cross Correlation
+		
+		//terminate conditions
+		boolean lengthInRange = true;
+		boolean widthInRange = true;
+		
+		//selects the pixels over which the pattern will hover
+		double[][] imageWindow = new double[pattern.length][pattern[0].length];
+		
+		for (int irow = 0; (irow < pattern.length) && lengthInRange ; ++irow) {
+			
+			lengthInRange = (irow + row) < image.length-1;
+			
+			for (int icolumn = 0; (icolumn < pattern[0].length) && widthInRange; ++icolumn) {
+				
+				widthInRange = (icolumn + col < image[0].length-1);
+				
+				imageWindow[irow][icolumn] = image[irow + row][icolumn + col];
+			}
 		}
 		
-		double ecartType = (Math.sqrt((imageVariance*imageVariance)*(patternVariance * patternVariance)));
+		double imageMean = windowMean(imageWindow); // imageWindow mean gray value
+		double imageVariance = 0; // sum of the difference between the image pixels' gray value and the image's mean gray value
+		
+		double patternMean = windowMean(pattern); // pattern mean gray value
+		double patternVariance = 0; // sum of the difference the pattern pixels' gray value and the image's mean gray value
+				
+		double covarianceSum = 0; // sum of the products of the given pixel's imageVariance and patternVariance
+		
+		
+		// calculates imageVariance, patternVariance, CovarianceSum 
+		for (int irow = 0; (irow < pattern.length); ++irow) {
+			for (int icolumn = 0 ; (icolumn < pattern[0].length); ++ icolumn) {
+				
+				imageVariance += Math.pow(imageWindow[irow][icolumn] - imageMean , 2);
+				
+				patternVariance += Math.pow(pattern[irow][icolumn] - patternMean , 2);	
+				
+				covarianceSum += (imageWindow[irow][icolumn] - imageMean) * (pattern[irow][icolumn] - patternMean);
+				
+			}
+		}
+		
+		//return cases
+		double ecartType = (Math.sqrt((imageVariance)*(patternVariance)));
 		if(ecartType == 0) { return -1;}
 		else { NCC = covarianceSum / (Math.sqrt((imageVariance*imageVariance)*(patternVariance * patternVariance))); 
 		return NCC; }
@@ -73,9 +106,9 @@ public class SimilarityBasedSearch {
 		// assertions
 		double[][] similarityMatrix = new double[image.length - pattern.length][image[0].length - pattern[0].length];
 		
-		for (int iligne = 0; iligne < similarityMatrix.length ; ++iligne) {
-			for (int icolonne = 0; icolonne < similarityMatrix[0].length ; ++icolonne) {
-				similarityMatrix[iligne][icolonne] = normalizedCrossCorrelation(iligne, icolonne, pattern, image);
+		for (int irow = 0; irow < similarityMatrix.length ; ++irow) {
+			for (int icolumn = 0; icolumn < similarityMatrix[0].length ; ++icolumn) {
+				similarityMatrix[irow][icolumn] = normalizedCrossCorrelation(irow, icolumn, pattern, image);
 			}
 		}
 		return similarityMatrix;

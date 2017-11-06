@@ -1,6 +1,11 @@
+package main;
 
-    package main;
 public final class ImageProcessing {
+	
+	//TODO convertion Binaire rgb -> int ne fonctionne pas!!!
+	// il faut utiliser la commande ' & 0x0ff' pour les shifts
+	//TODO verifier que le shift '>>' marche!!
+	
 	
     /**
      * Returns red component from given packed color.
@@ -12,13 +17,13 @@ public final class ImageProcessing {
      */
     public static int getRed(int rgb) {
 
-    	// to be controled, red version of the given pixel//
-    	 assert ((rgb < 256) || (rgb >= 0)); // Is that usefull??????//
-    	int red = rgb >> 16;
+    	// TODO  be reviewed
+    	assert ((rgb < 256) || (rgb >= 0)); // Is that useful?
+    	int red = rgb >> 16;  
         
     	return red; 
      
-    	// end //
+    	// end
     }
     
 
@@ -32,13 +37,18 @@ public final class ImageProcessing {
      */
     public static int getGreen(int rgb) {
     	
-    	// to be controled, green value of the given pixel//
+    	//TODO review
     	
-    	int greenw = rgb >> 8;
-    	int green = greenw << 17;
+    	int green = rgb >> 8;  
+    green = green & 0b11111111;
+    
+    	
+    	
+    	    	
+    	
     	return green; 
       
-    	// end //
+    	// end
     }
 
     /**
@@ -51,11 +61,11 @@ public final class ImageProcessing {
      */
     public static int getBlue(int rgb) {
     
-    	// to be controled, blue value of the given pixel//
+    	// TODO review
     
-    	int blue = rgb << 9;
-        return blue;
-        
+    	
+    	int blue= rgb & 0b11111111 ;
+    	return blue;
         // end//
     	
     }
@@ -72,17 +82,17 @@ public final class ImageProcessing {
      */
     public static double getGray(int rgb) {
     	
-    	// to be controled, Give the gray value of a given pixel//
+    	//TODO review
     	
-    	int blue = getBlue(rgb);
-    	int red = getRed(rgb);
-    	int green = getGreen(rgb);
+    	int blue = getBlue(rgb)&0xff;
+    	int red = getRed(rgb)&0xff;
+    	int green = getGreen(rgb)&0xff;
     	
-    	int gray = ((blue+red+green)/3);
-    	
-        return gray;
+    	return ((int)Math.round(((red+green+blue)/3)&0xff)) ;
     
-        // end //
+    	
+    
+        // end
     }
 
     /**
@@ -97,15 +107,13 @@ public final class ImageProcessing {
      */
     public static int getRGB(int red, int green, int blue) {
     	
-    	// to be controled, give the rgb value of a pixel for his red green and blue value//
+    	//TODO review
+    	//give the rgb value of a pixel for his red green and blue value//
     	assert ( ((red>=0)||(red<256)) || ((green>=0)||(green<256)) || ((blue>=0)||(blue<256)) );
-    	int rgb = red <<8;
-    	rgb = red + green;
-    	rgb = rgb <<8;
-    	rgb = rgb + blue;
-    	return rgb; 
+    	int rgb= ( red * 256 *256 )+(green *256)+(blue);
+    	return rgb;
 
-    	// end //
+    	// end
     }
 
     /**
@@ -116,14 +124,12 @@ public final class ImageProcessing {
      */
     public static int getRGB(double gray) {
     	
-    	// to be controled, get the rgb value of a given pixel from the gray value of that one//
-    	int rbg;
-    	for (i=0; i<3; ++i) {
-    	rgb = gray;
-    	rgb = rgb << 8;
-    	}
+    	int grayy=(int) Math.round(gray);
+    	int rgb= (grayy*256*256)+(grayy*256)+(grayy);
     	
-    	return rgb;
+    	
+    	 
+    	 return rgb;
     	
     	// end
     }
@@ -137,19 +143,19 @@ public final class ImageProcessing {
      */
     public static double[][] toGray(int[][] image) {
 
-    	// to be controled, we want to get the the gray value of each pixel of the image //
+    	// TODO be reviewed, we want to get the the gray value of each pixel of the image //
     
-    	double grayImage [][] = new double [728][1024];
-    	for (int iligne =0; i<image.length ; ++i) {
-    		for (int jcolonne =0; j<image.length ; ++j) {
-    			grayImage[iligne][jcolonne] = getGray(image [iligne][jcolonne]);
-    			image[iligne][jcolonne] = grayImage[iligne][jcolonne];
+    	double grayImage [][] = new double [image.length][image[0].length];
+    	for (int irow =0; irow <image.length ; ++irow) {
+    		for (int icolumn =0; icolumn <image[0].length ; ++icolumn) {
+    			//grayImage[irow][icolumn] = getGray(image [irow][icolumn]);
+    			grayImage[irow][icolumn] = getGray(image[irow][icolumn]); // check conversion from double to int
+    		    
     		}
     		}
-    	}
     	
-    	return grayImage [][] ;
-    	// besoins de "{}"????//
+    	return grayImage;
+    	// besoins de "{}"????
     }
 
     /**
@@ -161,18 +167,17 @@ public final class ImageProcessing {
      */
     public static int[][] toRGB(double[][] gray) {
         
-    	// to be controled  //
+    	// TODO review 
     	
-    	double [][] imageRGB = new double [748][1024]; 
-    	for (int iligne = 0; iligne < gray.length; ++iligne) {
-    		for (int jcolonne =0; jcolonne < gray.length; ++jcolonne) {
-    			for (int k=0; k<3; ++k) {
-    			imageRGB [iligne][jcolonne] = gray;
-    			imageRGB[iligne][jcolonne] = imageRGB[iligne][jcolonne] << 8;
-    		}
+    	int [][] imageRGB = new int [gray.length][gray[0].length]; 
+    	for (int irow = 0; irow < gray.length; ++irow) {
+    		for (int icolumn =0; icolumn < gray[0].length; ++icolumn) {
+    		
+    			imageRGB [irow][icolumn] =  getRGB(gray[irow][icolumn]); 
+    		
     		}
     	}
-    	return imageRGB [][];
+    	return imageRGB;
     }
 
     /**
@@ -187,16 +192,16 @@ public final class ImageProcessing {
     	
     	// TODO TOUT FAUT
     	// verify assertion
-    	// la méthode show n'est pas a 'portée'...
+    	
     	
     	// assert (matrix.length > 0) && (matrix[0].length > 0) && (min >= 0 ) && (max >= 0) ;
     	int differenceImage[][] = new int[matrix.length][matrix[0].length];
-    	for (int iligne = 0; iligne < matrix.length; ++iligne) {
-    			for (int icolonne = 0; icolonne < matrix[0].length; ++icolonne) {
-    				differenceImage[iligne][icolonne] = (int) ((matrix[iligne][icolonne] - min)/(max-min))*255 ;
+    	for (int irow = 0; irow < matrix.length; ++irow) {
+    			for (int icolumn = 0; icolumn < matrix[0].length; ++icolumn) {
+    				differenceImage[irow][icolumn] = (int) ((matrix[irow][icolumn] - min)/(max-min))*255 ;
     			}
     	}
-    	show(differenceImage, "mapping de la différence en gray-scale");
+    	// show(differenceImage, "mapping de la diff�rence en gray-scale");
     	return differenceImage;
     }
 }
